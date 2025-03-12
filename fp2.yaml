@@ -1,0 +1,78 @@
+{{- $image := or .image "debian-fp2.img" -}}
+
+architecture: armhf
+
+actions:
+  # Download all needed proprietary stuff first
+  - action: download
+    url: https://github.com/fairblobs/fp2-firmware/archive/refs/heads/master.zip
+    unpack: true     # unpack downloaded file
+    name: firmware # name for usage directory with unpacked content in other actions
+    cache: /tmp
+
+  - action: download
+    url: https://github.com/LineageOS/android_device_fairphone_FP2/archive/refs/heads/lineage-18.1.zip
+    unpack: true     # unpack downloaded file
+    name: wifi # name for usage directory with unpacked content in other actions
+    cache: /tmp
+
+  - action: debootstrap
+    suite: "bookworm"
+    components:
+      - main
+    mirror: https://deb.debian.org/debian
+    variant: minbase
+
+  - action: apt
+    packages: [ coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, ifupdown, udhcpd, nano, vim, iw, wpasupplicant, qrtr-tools, rmtfs, modemmanager, kmod]
+
+  - action: run
+    chroot: true
+    script: scripts/setup-user.sh
+
+  - action: run
+    chroot: true
+    command: echo fp2 > /etc/hostname
+
+  # add firmware
+  - action: overlay
+    origin: firmware
+    source: FP2-firmware-master/
+    destination: /lib/firmware
+  
+  - action: run
+    chroot: true
+    command: mkdir -p /lib/firmware/wlan/prima/
+
+  - action: overlay
+    origin: wifi
+    source: android_device_fairphone_FP2-lineage-18.1/wifi/
+    destination: /lib/firmware/wlan/prima
+
+  - action: overlay
+    source: overlays
+    destination: /
+
+  - action: image-partition
+    imagename: {{ $image }}
+    imagesize: 600MB
+    partitiontype: msdos
+    mountpoints:
+      - mountpoint: /
+        partition: root
+      - mountpoint: /boot
+        partition: boot
+        options: [nofail,x-systemd.automount]
+    partitions:
+      - name: boot
+        fs: ext2
+        start: 0%
+        end: 50MB
+        flags: [ boot ]
+      - name: root
+        fs: ext4
+        start: 64MB
+        end: 100%
+
+  - action: filesystem-deploy
+    description: Deploying filesystem onto image
