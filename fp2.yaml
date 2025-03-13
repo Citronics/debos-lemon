@@ -29,7 +29,7 @@ actions:
     command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
 
   - action: apt
-    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, nano, vim, qrtr-tools, rmtfs, firmware-qcom-soc, udev, kmod, modemmanager, wpasupplicant, ifupdown, udhcpd]
+    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, nano, vim, qrtr-tools, rmtfs, firmware-qcom-soc, udev, kmod, modemmanager, wpasupplicant, ifupdown, udhcpd, udhcpc, systemd-timesyncd, bluetooth]
 
   - action: run
     chroot: true
@@ -60,7 +60,7 @@ actions:
 
   - action: image-partition
     imagename: {{ $image }}
-    imagesize: 752MB
+    imagesize: 1GB
     partitiontype: msdos
     mountpoints:
       - mountpoint: /
