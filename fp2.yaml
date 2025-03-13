@@ -23,8 +23,13 @@ actions:
     mirror: https://deb.debian.org/debian
     variant: minbase
 
+  - action: run
+    description: Enable non-free-firmware Debian repo
+    chroot: true
+    command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
+
   - action: apt
-    packages: [ coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, ifupdown, udhcpd, nano, vim, iw, wpasupplicant, qrtr-tools, rmtfs, modemmanager, kmod]
+    packages: [ coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, udhcpd, nano, vim, ifupdown, qrtr-tools, rmtfs, firmware-qcom-soc, udev, kmod, modemmanager, wpasupplicant, network-manager]
 
   - action: run
     chroot: true
@@ -55,7 +60,7 @@ actions:
 
   - action: image-partition
     imagename: {{ $image }}
-    imagesize: 600MB
+    imagesize: 750MB
     partitiontype: msdos
     mountpoints:
       - mountpoint: /
