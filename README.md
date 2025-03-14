@@ -40,7 +40,7 @@ ssh root@10.0.42.1
 By default, the image rootfs is only a few 100MB. In order to extend it to the full remaining size of the userdata partition, run the following:
 ```
 kpartx -d /dev/mapper/mmcblk0p20p2
-parted /dev/mmcblk0p20 resizepart 2 100%
+growpart /dev/mmcblk0p20 2
 kpartx -asf /dev/mmcblk0p20
 resize2fs /dev/mmcblk0p20p2
 ```
