@@ -25,7 +25,7 @@ fastboot reboot
 
 ## Flashing pre built images
 
-Go to releases, select one and download either debian-fp2.img.tar.gz or ubuntu-fp2.img.tar.gz
+Go to releases, select one and download either `sparse-debian-fp2.img` or `sparse-ubuntu-fp2.img` and flash it with fastboot as explained above.
 
 ## Connecting to your fp2 via usb
 
