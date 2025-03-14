@@ -29,7 +29,7 @@ actions:
     command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
 
   - action: apt
-    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, nano, vim, qrtr-tools, rmtfs, firmware-qcom-soc, udev, kmod, modemmanager, wpasupplicant, ifupdown, udhcpd, udhcpc, systemd-timesyncd, bluetooth]
+    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, rmtfs, udev, kmod, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, parted, kpartx, fdisk]
 
   - action: run
     chroot: true
@@ -58,9 +58,13 @@ actions:
     source: overlays
     destination: /
 
+  - action: run
+    chroot: true
+    script: scripts/setup-networking.sh
+
   - action: image-partition
     imagename: {{ $image }}
-    imagesize: 4GB
+    imagesize: 750MB
     partitiontype: msdos
     mountpoints:
       - mountpoint: /
