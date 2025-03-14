@@ -5,6 +5,14 @@ It uses a pre-built kernel and initramfs.
 
 After building, you should use the `img2simg` to create a sparse image before flashing it with fastboot.
 
+## Prerequisite
+
+You need to have lk2nd flashed on the boot partition for these images to work. Download the last version [here](https://github.com/msm8916-mainline/lk2nd/releases/download/20.0/lk2nd-msm8974.img) and run:
+```
+fastboot flash boot lk2nd-msm8974.img
+fastboot reboot
+```
+
 ## Building
 
 ```
@@ -14,6 +22,10 @@ fastboot flash userdata sparse-debian-fp2.img
 fastboot reboot
 # Enjoy running debian or ubuntu on your fairphone
 ```
+
+## Flashing pre built images
+
+Go to releases, select one and download either debian-fp2.img.tar.gz or ubuntu-fp2.img.tar.gz
 
 ## Connecting to your fp2 via usb
 
