@@ -3,11 +3,18 @@
 This repository allows you to build a debian or ubuntu image to be flashed on the fairphone 2 userdata partition.
 It uses a pre-built kernel and initramfs.
 
-After building, you should use the `img2simg` to create a sparse image before flashing it with fastboot.
+After building, you should use `img2simg` to create a sparse image before flashing it with fastboot.
+
+It is part of the `android-sdk-libsparse-utils` so be sure to install it with:
+```
+sudo apt install android-sdk-libsparse-utils
+```
+
+Or the equivalent for your linux distribution.
 
 ## Prerequisite
 
-You need to have lk2nd flashed on the boot partition for these images to work. Download the last version [here](https://github.com/msm8916-mainline/lk2nd/releases/download/20.0/lk2nd-msm8974.img) and run:
+You need to have lk2nd flashed on the boot partition for these images to work. Download it [here](https://github.com/msm8916-mainline/lk2nd/releases/download/20.0/lk2nd-msm8974.img) and run:
 ```
 fastboot flash boot lk2nd-msm8974.img
 fastboot reboot
@@ -34,6 +41,36 @@ A static IP is assigned to the `usb0` so you can just plug your fp2 to your host
 ssh root@10.0.42.1
 # password is root
 ```
+
+## Using Wifi
+
+The networking setup is done with `systemd-networkd` and to have wifi working you will need to ssh to your fp2 using the method above and edit two files.
+
+1. Uncomment everything in `/etc/network/interfaces.d/wlan0`
+```
+auto wlan0
+iface wlan0 inet dhcp
+  pre-up wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -B
+  post-down killall -q wpa_supplicant
+```
+2. Set your SSID and passkey in `/etc/wpa_supplicant.conf`
+```
+disable_scan_offload=1
+tdls_external_control=1
+driver_param=use_p2p_group_interface=1
+
+network={
+    #key_mgmt=WPA-PSK
+    ssid="your ssid here"
+    psk="your psk here"
+}
+```
+3. Restart networking
+```
+systemctl restart networking
+```
+
+You should now be connected to your wifi network.
 
 ## Resizing the rootfs to take all the userdata empty space
 
