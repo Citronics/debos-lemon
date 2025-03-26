@@ -28,7 +28,7 @@ actions:
     command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
 
   - action: apt
-    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, rmtfs, udev, kmod, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils]
+    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils]
 
   - action: run
     chroot: true
