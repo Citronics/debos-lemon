@@ -44,33 +44,22 @@ ssh root@10.0.42.1
 
 ## Using Wifi
 
-The networking setup is done with `systemd-networkd` and to have wifi working you will need to ssh to your fp2 using the method above and edit two files as follows:
+The networking setup is done with Network Manager's `nmcli` and to have wifi working you will need to ssh to your fp2 using the method above and use the follwing:
 
-1. Uncomment everything in `/etc/network/interfaces.d/wlan0`
-```
-auto wlan0
-iface wlan0 inet dhcp
-  pre-up wpa_supplicant -i wlan0 -c /etc/wpa_supplicant.conf -B
-  post-down killall -q wpa_supplicant
-```
-2. Set your SSID and passkey in `/etc/wpa_supplicant.conf`
-```
-disable_scan_offload=1
-tdls_external_control=1
-driver_param=use_p2p_group_interface=1
-
-network={
-    #key_mgmt=WPA-PSK
-    ssid="your ssid here"
-    psk="your psk here"
-}
-```
-3. Restart networking
-```
-systemctl restart networking
-```
+1. Make sure you can ssh to your FP2 by following the previous section
+2. Use `nmcli --ask dev wifi connect <YOURSSID>`
 
 You should now be connected to your wifi network.
+
+## Using the modem
+
+The modem configuration is also done with Network Manager's `nmcli` and to connect to your APN, you can use the following:
+
+1. Make sure you can ssh to your FP2 by following the previous section
+2. Use `nmcli connection add type gsm ifname '*' con-name gsm apn <YOUR APN>` to create the connection
+3. Then type `nmcli connection up gsm`
+
+And you should be connected to your APN.
 
 ## Resizing the rootfs to take all the userdata empty space
 
@@ -82,7 +71,7 @@ kpartx -asf /dev/mmcblk0p20
 resize2fs /dev/mmcblk0p20p2
 ```
 
-if it fails the first time (it happes, I don't know why yet), then run those commands a second time and you should see your `/` taking several GB now.
+if it fails the first time (it happens, I don't know why yet), then run those commands a second time and you should see your `/` taking several GB now.
 
 ## Disclaimer
 This is a very early stage support. Use it at your own risk.
