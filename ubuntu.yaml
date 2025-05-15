@@ -38,7 +38,7 @@ actions:
 
   - action: run
     chroot: true
-    command: echo fp2 > /etc/hostname
+    command: echo citronics > /etc/hostname
 
   - action: overlay
     origin: firmware
@@ -57,6 +57,10 @@ actions:
   - action: overlay
     source: overlays
     destination: /
+
+  - action: run
+    chroot: true
+    script: scripts/setup-networking.sh
 
   - action: image-partition
     imagename: {{ $image }}
