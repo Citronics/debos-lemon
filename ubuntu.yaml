@@ -3,18 +3,6 @@
 architecture: armhf
 
 actions:
-  - action: download
-    url: https://github.com/fairblobs/fp2-firmware/archive/refs/heads/master.zip
-    unpack: true
-    name: firmware
-    cache: /tmp
-
-  - action: download
-    url: https://github.com/LineageOS/android_device_fairphone_FP2/archive/refs/heads/lineage-18.1.zip
-    unpack: true
-    name: wifi
-    cache: /tmp
-
   - action: debootstrap
     suite: "noble"
     components:
@@ -30,7 +18,15 @@ actions:
     command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
 
   - action: apt
-    packages: [coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils]
+    packages: [ca-certificates, coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils, fake-hwclock]
+
+  - action: run
+    description: Add citronics APT repository
+    chroot: true
+    command: echo "deb [trusted=yes] https://raw.githubusercontent.com/Citronics/deb-packages/main stable main" | tee /etc/apt/sources.list.d/citronics.list
+
+  - action: apt
+    packages: [linux-firmware-lemon]
 
   - action: run
     chroot: true
@@ -38,25 +34,15 @@ actions:
 
   - action: run
     chroot: true
-    command: echo fp2 > /etc/hostname
-
-  - action: overlay
-    origin: firmware
-    source: FP2-firmware-master/
-    destination: /lib/firmware
-
-  - action: run
-    chroot: true
-    command: mkdir -p /lib/firmware/wlan/prima/
-
-  - action: overlay
-    origin: wifi
-    source: android_device_fairphone_FP2-lineage-18.1/wifi/
-    destination: /lib/firmware/wlan/prima
+    command: echo citronics > /etc/hostname
 
   - action: overlay
     source: overlays
     destination: /
+
+  - action: run
+    chroot: true
+    script: scripts/setup-networking.sh
 
   - action: image-partition
     imagename: {{ $image }}
