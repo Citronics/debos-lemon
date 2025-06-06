@@ -18,7 +18,7 @@ actions:
     command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
 
   - action: apt
-    packages: [ca-certificates, coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils, fake-hwclock]
+    packages: [ca-certificates, coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils, fake-hwclock, wireless-regdb]
 
   - action: run
     description: Add citronics APT repository
@@ -26,7 +26,7 @@ actions:
     command: echo "deb [trusted=yes] https://raw.githubusercontent.com/Citronics/deb-packages/main stable main" | tee /etc/apt/sources.list.d/citronics.list
 
   - action: apt
-    packages: [linux-firmware-lemon]
+    packages: [initramfs-tools, citronics-initramfs, linux-firmware-lemon, linux-headers-6.11.4-citronics-lemon, linux-image-6.11.4-citronics-lemon]
 
   - action: run
     chroot: true
@@ -43,6 +43,10 @@ actions:
   - action: run
     chroot: true
     script: scripts/setup-networking.sh
+
+  - action: run
+    chroot: true
+    command: update-initramfs -c -k 6.11.4-citronics-lemon
 
   - action: image-partition
     imagename: {{ $image }}
