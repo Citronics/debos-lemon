@@ -24,7 +24,7 @@ actions:
     command: echo "deb [trusted=yes] https://raw.githubusercontent.com/Citronics/deb-packages/main stable main" | tee /etc/apt/sources.list.d/citronics.list
 
   - action: apt
-    packages: [initramfs-tools, citronics-initramfs, linux-firmware-lemon, linux-headers-6.11.4-citronics-lemon, linux-image-6.11.4-citronics-lemon]
+    packages: [initramfs-tools, citronics-initramfs, linux-firmware-lemon, linux-headers-6.12.0-citronics-lemon, linux-image-6.12.0-citronics-lemon]
 
   - action: run
     chroot: true
@@ -44,7 +44,7 @@ actions:
 
   - action: run
     chroot: true
-    command: update-initramfs -c -k 6.11.4-citronics-lemon
+    command: update-initramfs -c -k 6.12.0-citronics-lemon
 
   - action: image-partition
     imagename: {{ $image }}
