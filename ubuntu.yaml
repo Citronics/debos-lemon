@@ -18,7 +18,7 @@ actions:
     command: sed -i 's/main$/main non-free-firmware/g' /etc/apt/sources.list
 
   - action: apt
-    packages: [ca-certificates, coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils, fake-hwclock, wireless-regdb]
+    packages: [ca-certificates, coreutils, sudo, openssh-server, adduser, systemd, systemd-sysv, systemd-resolved, nano, vim, qrtr-tools, libqmi-utils, rmtfs, udev, kmod, network-manager, modemmanager, wpasupplicant, ifupdown, isc-dhcp-client, isc-dhcp-server, systemd-timesyncd, bluetooth, kpartx, cloud-utils, fake-hwclock, wireless-regdb, usbutils, iputils-ping]
 
   - action: run
     description: Add citronics APT repository
