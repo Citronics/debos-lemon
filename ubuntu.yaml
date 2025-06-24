@@ -1,4 +1,4 @@
-{{- $image := or .image "ubuntu-fp2.img" -}}
+{{- $image := or .image "ubuntu-lemon.img" -}}
 
 architecture: armhf
 

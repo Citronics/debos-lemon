@@ -1,4 +1,4 @@
-{{- $image := or .image "debian-fp2.img" -}}
+{{- $image := or .image "debian-lemon.img" -}}
 
 architecture: armhf
 
